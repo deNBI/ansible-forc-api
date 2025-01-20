@@ -36,6 +36,7 @@
 
 - name: Run the backup-forc container
   shell: |
+    docker ps -q --filter name=backup-forc && docker stop backup-forc && docker rm backup-forc
     docker run -d \
       --name backup-forc \
       --restart always \
@@ -49,7 +50,7 @@
       -e BACKUP_ROTATION_MAX_SIZE={{ FORC_BACKUP_ROTATION_MAX_SIZE }} \
       -e BACKUP_ROTATION_CUT_SIZE={{ FORC_BACKUP_ROTATION_CUT_SIZE }} \
       -e BACKUP_ROTATION_SIZE_TYP={{ FORC_BACKUP_ROTATION_SIZE_TYP }} \
-      quay.io/denbicloud/cron-backup:0.13.5
+      quay.io/denbicloud/cron-backup:0.14.3
   args:
     executable: /bin/bash
 
