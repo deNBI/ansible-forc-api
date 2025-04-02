@@ -1,10 +1,24 @@
 worker_processes  {{ OPENRESTY_WORKER_PROCESSES }};
 
 # /usr/local/openresty/nginx/logs/
-error_log  logs/error.log;
-error_log  logs/error.log  notice;
-error_log  logs/error.log  info;
-error_log  logs/error.log  debug;
+error_log  /var/log/openresty_error.log;
+error_log  /var/log/openresty_error.log  notice;
+error_log  /var/log/openresty_error.log  info;
+error_log  /var/log/openresty_error.log  debug;
+
+
+/var/log/openresty_error.log {
+    missingok
+    notifempty
+    delaycompress
+    compress
+    maxsize 25M
+    keep 4
+    postrotate
+        /usr/sbin/nginx -s reopen
+    endscript
+}
+
 events {
     worker_connections  1024;
 }
