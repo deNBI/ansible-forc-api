@@ -28,6 +28,7 @@ Role Variables
 | FORC_TEMPLATE_PATH        | Filesystem path which locates template files for FORC                 | /var/forc/template_path/      | Yes       |
 | FORC_SERVICE_PORT         | The Port on which OpenResty will bind forc to.                        | 5000                          | Yes       |
 | FORC_SERVICE_USE_HTTPS    | If the Forc Backend Service uses HTTPs                                | True                          | Yes       |
+| FORC_LOCAL_IP             | Local IP for Forc Service -- must be set if FORC_SERVICE_USE_HTTPS is false |                        | NO        |
 | FORC_OIDC_DISCOVERY_URL   | OIDC Credentials                                                      | https://login.elixir-czech.org/oidc/.well-known/openid-configuration  | Yes |
 | FORC_OIDC_CLIENT_ID       | OIDC Credentials                                                      |                               | Yes       |
 | FORC_OIDC_CLIENT_SECRET   | OIDC Credentials                                                      |                               | Yes       |
