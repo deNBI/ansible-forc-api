@@ -91,6 +91,17 @@ To install OpenResty+certbot(+renewal)+FORC:
           FORC_OIDC_CLIENT_SECRET: fmsdgndsogijwsgjtdfogjreowigj
           DOMAIN: "{{ domain }}"
 
+---
+
+### Miscellaneous
+
+Status information like connection details can be accessed from inside the FORC VM using:
+
+```
+curl http://127.0.0.1:8080/nginx_status
+```
+
+
 License
 -------
 
