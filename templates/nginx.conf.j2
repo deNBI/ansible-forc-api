@@ -10,6 +10,8 @@ events {
 }
 
 http {
+    limit_req_zone $binary_remote_addr zone=perip:10m rate=10r/s;
+
     include       mime.types;
     lua_package_path "{{ FORC_BACKEND_PATH }}/scripts/?.lua;;";
     default_type  application/octet-stream;
@@ -135,7 +137,7 @@ server {
         set $session_shm_lock_max_step 0.5;
 
         location / {
-
+                limit_req zone=perip burst=30 nodelay;
                 access_by_lua_block {
                 -- Start actual openid authentication procedure
                 local res, err = require("resty.openidc").authenticate(opts2)
