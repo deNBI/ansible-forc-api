@@ -138,6 +138,7 @@ server {
 
         location / {
                 limit_req zone=perip burst=30 nodelay;
+                limit_req_status 429;
                 access_by_lua_block {
                 -- Start actual openid authentication procedure
                 local res, err = require("resty.openidc").authenticate(opts2)
