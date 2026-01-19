@@ -103,8 +103,11 @@ curl http://127.0.0.1:8080/nginx_status
 
 
 ### Mirror Setup
-If you want to setup an forc mirror, you can proceed with the normal setup and later set a cronjob (at best every 5 Minutes)
-which runs the sync-backends.sh script ( in the script you need to update the REMOTE_USER and REMOTE_HOST)
+To set up a **forc mirror**, follow the standard setup process first.  
+Afterwards, create a cron job (ideally running every **5 minutes**) that executes the `sync-backends.sh` script.
+
+Make sure to update the `REMOTE_USER` and `REMOTE_HOST` variables inside the script before enabling the cron job.
+
 
 License
 -------
