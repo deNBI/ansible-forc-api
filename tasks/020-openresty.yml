@@ -36,6 +36,33 @@
     dest: "{{ FORC_BACKEND_PATH }}/scripts/"
     remote_src: yes
 
+- name: Copy Blocked IP files
+  copy:
+    src: "{{ role_path }}/files"
+    dest: "/persistent"
+
+- name: Ensure the generate ip list script is executable
+  file:
+      path: "/persistent/generate_ip_blocklist.sh"
+      mode: '0755'
+      state: file
+
+- name: Run Generate IP  blocklists script
+  ansible.builtin.shell: "/persistent/generate_ip_blocklist.sh"
+  become: true   
+
+
+- name: Add cron job to update blocklist and restart Haproxy container
+  cron:
+        name: "Daily IP blocklist update + restart Haproxy"
+        user: ubuntu
+        minute: 0
+        hour: 2
+        job: >
+          "/persistent/generate_ip_blocklist.sh">> "/persistent/generate_ip_blocklist.log 2>&1
+          && docker restart openresty
+
+
 - name: Generate OpenResty configuration
   template:
     src: nginx.conf.j2
