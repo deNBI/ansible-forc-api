@@ -55,7 +55,7 @@ http {
     # -------------------------------
     geo $blocked_ip {
         default 0;
-        include /etc/openresty/nginx/block_ips_geo.conf;  # IP list with 1 per blocked IP
+        include /etc/openresty/block_ips_geo.conf;  # IP list with 1 per blocked IP
     }
 
     # -------------------------------
