@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Paths relative to script directory
 INPUT="$SCRIPT_DIR/ip_blocklists.txt"
-OUTPUT="/etc/nginx/block_ips_geo.conf"
+OUTPUT="/etc/openresty/nginx/block_ips_geo.conf"
 TEMP="$SCRIPT_DIR/block_tmp.txt"
 
 rm -f "$TEMP" "$OUTPUT"
