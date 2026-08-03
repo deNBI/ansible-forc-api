@@ -1,0 +1,31 @@
+services:
+  forc:
+    image: oci.bi.denbi.de/simplevm/forc:{{ FORC_IMAGE_TAG | default('refactor-docker') }}
+    container_name: forc
+    env_file:
+      - .env # envs for openresty
+    volumes:
+      - {{ FORC_BACKEND_PATH }}:/var/forc/backend_path/:rw
+      - /etc/letsencrypt/:/etc/letsencrypt/:r
+    ports:
+      - 0.0.0.0:5000:5000
+      - 0.0.0.0:80:80
+      - 0.0.0.0:443:443
+
+  backup:
+    image: quay.io/denbicloud/cron-backup:0.14.3
+    container_name: backup-forc
+    restart: always
+    volumes:
+      - {{ FORC_BACKEND_PATH }}:/backends:ro
+      - {{ FORC_INSTALLATION_PATH }}/forc/backup/install-packages.sh:/install-packages.sh
+      - {{ FORC_INSTALLATION_PATH }}/forc/backup/backup.sh:/etc/cronscripts/backup.sh
+      - {{ FORC_INSTALLATION_PATH }}/forc/backup/backup-cron:/etc/crontabs/dockercron/backup-cron
+      - {{ FORC_BACKUP_HOST_PATH }}:/etc/backup:rw
+    environment:
+      - BACKUP_ROTATION_ENABLED={{ FORC_BACKUP_ROTATION_ENABLED }}
+      - BACKUP_ROTATION_MAX_SIZE={{ FORC_BACKUP_ROTATION_MAX_SIZE }}
+      - BACKUP_ROTATION_CUT_SIZE={{ FORC_BACKUP_ROTATION_CUT_SIZE }}
+      - BACKUP_ROTATION_SIZE_TYP={{ FORC_BACKUP_ROTATION_SIZE_TYP }}
+    depends_on:
+      - forc

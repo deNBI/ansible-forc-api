@@ -6,14 +6,29 @@
     state: directory
     mode: '0755'
 
+- name: Create backup scripts directory
+  file:
+    path: "{{ FORC_INSTALLATION_PATH }}/forc/backup"
+    state: directory
+    mode: '0755'
+
+- name: Copy backup scripts
+  copy:
+    src: "{{ item }}"
+    dest: "{{ FORC_INSTALLATION_PATH }}/forc/backup/"
+  with_items:
+    - backup.sh
+    - backup-cron
+    - install-packages.sh
+
 - name: Generate .env file for forc
   template:
     src: forc.env.j2
     dest: "{{ FORC_INSTALLATION_PATH }}/forc/.env"
 
-- name: Copy docker-compose.yml
-  copy:
-    src: docker-compose.yml
+- name: Generate docker-compose.yml
+  template:
+    src: docker-compose.yml.j2
     dest: "{{ FORC_INSTALLATION_PATH }}/forc/docker-compose.yml"
 
 - name: Override Docker image tag if provided
@@ -28,7 +43,6 @@
     echo "{{ OCI_TOKEN }}" | docker login {{ DOCKER_REGISTRY_URL }} -u "{{ OCI_USERNAME }}" --password-stdin
   when: OCI_USERNAME != ""
   no_log: true
-
 
 - name: Start forc container
   community.docker.docker_compose_v2:
