@@ -23,6 +23,13 @@
     replace: 'image: oci.bi.denbi.de/simplevm/forc:{{ FORC_IMAGE_TAG }}'
   when: FORC_IMAGE_TAG != ""
 
+- name: Log into Docker registry
+  community.docker.docker_login:
+    registry_url: "{{ DOCKER_REGISTRY_URL }}"
+    username: "{{ DOCKER_REGISTRY_USER }}"
+    password: "{{ DOCKER_REGISTRY_PASSWORD }}"
+  when: DOCKER_REGISTRY_USER != ""
+
 - name: Start forc container
   community.docker.docker_compose_v2:
     project_src: "{{ FORC_INSTALLATION_PATH }}/forc"

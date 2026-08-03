@@ -30,7 +30,7 @@ FORC_TEMPLATE_PATH: "/var/forc/template_path/"
 # The Port on which OpenResty will bind forc to.
 FORC_SERVICE_PORT: 5000
 
-# If Forc Service will use HTTPs -- if not  FORC_LOCAL_NETWORK must be provided
+# If Forc Service will use HTTPs -- if not FORC_LOCAL_NETWORK must be provided
 FORC_SERVICE_USE_HTTPS: true
 
 #IF Forc Service does not use https needs to provided to allow requests only for the local reachable ip
@@ -45,3 +45,8 @@ INSTALL_OPENRESTY: "yes"
 FORC_OIDC_DISCOVERY_URL: "https://login.elixir-czech.org/oidc/.well-known/openid-configuration"
 FORC_OIDC_CLIENT_ID: ""
 FORC_OIDC_CLIENT_SECRET: ""
+
+# Docker Registry Credentials
+DOCKER_REGISTRY_URL: "oci.bi.denbi.de"
+DOCKER_REGISTRY_USER: ""
+DOCKER_REGISTRY_PASSWORD: ""

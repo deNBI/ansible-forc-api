@@ -23,6 +23,9 @@ Role Variables
 | FORC_SECRET_KEY           | Encryption key for flask service                                            |                                                                    | Yes       |
 | FORC_API_KEY              | X-Auth Key for accessing REST API                                           |                                                                    | Yes       |
 | FORC_IMAGE_TAG            | Optional: Override the Docker image tag. If not set, the default from docker-compose.yml is used. |                                                                    | No        |
+| DOCKER_REGISTRY_URL       | URL of the Docker registry                                                     | oci.bi.denbi.de                                                       | No        |
+| DOCKER_REGISTRY_USER      | Username for the Docker registry                                               |                                                                    | No        |
+| DOCKER_REGISTRY_PASSWORD  | Password/Token for the Docker registry                                         |                                                                    | No        |
 | FORC_BACKEND_PATH         | Filesystem path where FORC generates NGINX config snippets (mounted in Docker) | /var/forc/backend_path/    |   Yes     |
 | FORC_TEMPLATE_PATH        | Filesystem path which locates template files for FORC                        | /var/forc/template_path/      | Yes       |
 | FORC_SERVICE_PORT         | The Port on which OpenResty will bind forc to.                              | 5000                          | Yes       |
