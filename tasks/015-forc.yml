@@ -26,10 +26,9 @@
 - name: Log into Docker registry
   community.docker.docker_login:
     registry_url: oci.bi.denbi.de
-    username: "{{ DOCKER_REGISTRY_USER }}"
-    password: "{{ DOCKER_REGISTRY_PASSWORD }}"
+    username: "{{ OCI_USERNAME }}"
+    password: "{{ OCI_TOKEN }}"
     reauthorize: true
-  when: DOCKER_REGISTRY_USER != ""
 
 
 - name: Start forc container
