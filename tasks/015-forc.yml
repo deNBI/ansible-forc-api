@@ -31,13 +31,6 @@
     src: docker-compose.yml.j2
     dest: "{{ FORC_INSTALLATION_PATH }}/forc/docker-compose.yml"
 
-- name: Override Docker image tag if provided
-  replace:
-    path: "{{ FORC_INSTALLATION_PATH }}/forc/docker-compose.yml"
-    regexp: 'image: oci.bi.denbi.de/simplevm/forc:.*'
-    replace: 'image: oci.bi.denbi.de/simplevm/forc:{{ FORC_IMAGE_TAG }}'
-  when: FORC_IMAGE_TAG != ""
-
 - name: Log into Docker registry
   ansible.builtin.shell: |
     echo "{{ OCI_TOKEN }}" | docker login {{ DOCKER_REGISTRY_URL }} -u "{{ OCI_USERNAME }}" --password-stdin
