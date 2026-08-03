@@ -24,11 +24,10 @@
   when: FORC_IMAGE_TAG != ""
 
 - name: Log into Docker registry
-  community.docker.docker_login:
-    registry_url: oci.bi.denbi.de
-    username: "{{ OCI_USERNAME }}"
-    password: "{{ OCI_TOKEN }}"
-    reauthorize: true
+  ansible.builtin.shell: |
+    echo "{{ OCI_TOKEN }}" | docker login {{ DOCKER_REGISTRY_URL }} -u "{{ OCI_USERNAME }}" --password-stdin
+  when: OCI_USERNAME != ""
+  no_log: true
 
 
 - name: Start forc container
