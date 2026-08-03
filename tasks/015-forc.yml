@@ -25,7 +25,7 @@
 
 - name: Log into Docker registry
   community.docker.docker_login:
-    registry_url: "{{ DOCKER_REGISTRY_URL }}"
+    registry_url: "oci.bi.denbi.de"
     username: "{{ DOCKER_REGISTRY_USER }}"
     password: "{{ DOCKER_REGISTRY_PASSWORD }}"
   when: DOCKER_REGISTRY_USER != ""
