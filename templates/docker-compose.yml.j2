@@ -1,6 +1,6 @@
 services:
   forc:
-    image: "oci.bi.denbi.de/simplevm/forc:{{ FORC_IMAGE_TAG | default('refactor-docker') }}"
+    image: "oci.bi.denbi.de/simplevm/forc:{{ FORC_IMAGE_TAG | default('0.14.0') }}"
     container_name: forc
     env_file:
       - .env # envs for openresty
