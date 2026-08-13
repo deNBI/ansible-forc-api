@@ -1,71 +1,67 @@
 Role Name
 =========
 
-This role installs the [FastapiOpenRestyConfigurator](https://github.com/deNBI/simpleVMWebGateway) and optionally OpenResty
-with all needed plugins and SSL certs.
+This role installs the [FastapiOpenRestyConfigurator](https://github.com/deNBI/simpleVMWebGateway) (FORC) and OpenResty using a Docker Compose setup.
 
 Requirements
 ------------
 
 Needed requirements:
 
-* Ubuntu 18.04 Bionic
+* Ubuntu (latest LTS recommended)
 * Access to instance via standard ports (80, 443)
 * DNS Name for autogenerating ssl certs via certbot.
 * OpenID Connect client.
-
 
 Role Variables
 --------------
 
 **vars/main.yml**
 
-| Variable                  | Description           | Default                                                                       | Mandatory |
-| -------------             |-------------          |            -----                                                              |     ---   |
-| FORC_SECRET_KEY           | Encryption key for flask service |                                                                    | Yes       |
-| FORC_API_KEY              | X-Auth Key for accessing REST API                                     |                               | Yes       |
-| FORC_BACKEND_PATH         | Filesystem path in where FORC generates NGINX config snippets to      |    /var/forc/backend_path/    |   Yes     |
-| FORC_TEMPLATE_PATH        | Filesystem path which locates template files for FORC                 | /var/forc/template_path/      | Yes       |
-| FORC_SERVICE_PORT         | The Port on which OpenResty will bind forc to.                        | 5000                          | Yes       |
-| FORC_SERVICE_USE_HTTPS    | If the Forc Backend Service uses HTTPs                                | True                          | Yes       |
-| FORC_LOCAL_IP             | Local IP for Forc Service -- must be set if FORC_SERVICE_USE_HTTPS is false |                        | NO        |
-| FORC_OIDC_DISCOVERY_URL   | OIDC Credentials                                                      | https://login.elixir-czech.org/oidc/.well-known/openid-configuration  | Yes |
-| FORC_OIDC_CLIENT_ID       | OIDC Credentials                                                      |                               | Yes       |
-| FORC_OIDC_CLIENT_SECRET   | OIDC Credentials                                                      |                               | Yes       |
-| DOMAIN                    | The domain name of the webserver serving forc and OpenResty           |                               | Yes       |
-| CERTBOT_USED              | Set this to no if you don't use certbot for autogenerating ssl certs. | yes                           | No        |
-| INSTALL_OPENRESTY         | Set this to no if you only want to install forc as uWSGI app.         | yes                           | No        |
-| FORC_BACKUP_ENABLED       | If Backups from backends and templates folder will be created         | yes                           | NO        |
-| FORC_BACKUP_HOST_PATH     | Where the Backups will be stored on the host                          | /persistent/backup/forc       | No        |
-| FORC_BACKUP_ROTATION_ENABLED | If the Backups will be rotated                                     | true                          | No        |
-| FORC_BACKUP_ROTATION_MAX_SIZE | When this size of the backups folder is reached the backups are rotated | 5                       | No        |
-| FORC_BACKUP_ROTATION_CUT_SIZE | Deletes oldest Backups till this  size is reached                 | 4                             | No        |
-| FORC_BACKUP_ROTATION_SIZE_TYP| Size Type For Rotation                                             | GiB                           | No        |
-
+| Variable                  | Description                                                              | Default                                                                       | Mandatory |
+| -------------             |-------------                                                              |            -----                                                              |     ---   |
+| FORC_SECRET_KEY           | Encryption key for flask service                                            |                                                                    | Yes       |
+| FORC_API_KEY              | X-Auth Key for accessing REST API                                           |                                                                    | Yes       |
+| FORC_IMAGE_TAG            | Optional: Override the Docker image tag. If not set, the default from docker-compose.yml is used. |                                                                    | No        |
+| DOCKER_REGISTRY_URL       | URL of the Docker registry                                                     | oci.bi.denbi.de                                                       | No        |
+| OCI_USERNAME              | Username for the Docker registry                                               |                                                                    | No        |
+| OCI_TOKEN                 | Password/Token for the Docker registry                                         |                                                                    | No        |
+| FORC_BACKEND_PATH         | Filesystem path where FORC generates NGINX config snippets (mounted in Docker) | /var/forc/backend_path/    |   Yes     |
+| FORC_TEMPLATE_PATH        | Filesystem path which locates template files for FORC                        | /var/forc/template_path/      | Yes       |
+| FORC_SERVICE_PORT         | The Port on which OpenResty will bind forc to.                              | 5000                          | Yes       |
+| FORC_SERVICE_USE_HTTPS    | If the Forc Backend Service uses HTTPs                                      | True                          | Yes       |
+| FORC_LOCAL_IP             | Local IP for Forc Service -- must be set if FORC_SERVICE_USE_HTTPS is false   |                        | NO        |
+| FORC_OIDC_DISCOVERY_URL   | OIDC Credentials                                                          | https://login.elixir-czech.org/oidc/.well-known/openid-configuration  | Yes |
+| FORC_OIDC_CLIENT_ID       | OIDC Credentials                                                          |                                                                    | Yes       |
+| FORC_OIDC_CLIENT_SECRET   | OIDC Credentials                                                          |                                                                    | Yes       |
+| DOMAIN                    | The domain name of the webserver serving forc and OpenResty                 |                                                                    | Yes       |
+| CERTBOT_USED              | Set this to no if you don't use certbot for autogenerating ssl certs.       | yes                           | No        |
+| FORC_BACKUP_ENABLED       | If Backups from backends and templates folder will be created               | yes                           | NO        |
+| FORC_BACKUP_HOST_PATH     | Where the Backups will be stored on the host                                | /persistent/backup/forc       | No        |
+| FORC_BACKUP_ROTATION_ENABLED | If the Backups will be rotated                                           | true                          | No        |
+| FORC_BACKUP_ROTATION_MAX_SIZE | When this size of the backups folder is reached the backups are rotated  | 5                       | No        |
+| FORC_BACKUP_ROTATION_CUT_SIZE | Deletes oldest Backups till this size is reached                        | 4                             | No        |
+| FORC_BACKUP_ROTATION_SIZE_TYP| Size Type For Rotation                                                   | GiB                           | No        |
 
 **defaults/main.yml**
 
-| Variable                  | Description           | Default                     | Mandatory |
-| -------------             |-------------          |            -----           |     ---   |
+| Variable                  | Description                                         | Default                     | Mandatory |
+| -------------             |-------------                                       |            -----           |     ---   |
 | OPENRESTY_WORKER_PROCESSES | Number of worker processes for the OpenResty webserver. | 10 | Yes |
-| OPENRESTY_DNS_SERVERS     | Resolver needed by OpenResty  | 8.8.8.8   | Yes |
-| FORC_INSTALLATION_PATH    | Path on where forc will be installed to | /opt/   | Yes |
-
+| OPENRESTY_DNS_SERVERS     | Resolver needed by OpenResty                       | 8.8.8.8   | Yes |
+| FORC_INSTALLATION_PATH    | Path on where forc will be installed to           | /opt/   | Yes |
 
 
 Dependencies
 ------------
 
-If auto generating certs is wanted:
-
-* geerlingguy.certbot 
-
-A requirements.yml is placed in the ansible folder. If you have question on how a requirements.yml is used, please visit [here](https://galaxy.ansible.com/docs/using/installing.html#installing-multiple-roles-from-a-file).
+This role installs Docker and the Docker Compose plugin automatically.
+If auto generating certs is wanted, ensure `geerlingguy.certbot` is included in your playbook.
 
 Example Playbook
 ----------------
 
-To install OpenResty+certbot(+renewal)+FORC:
+To install FORC (includes OpenResty in Docker):
 
     - hosts: all
       become: yes

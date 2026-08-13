@@ -1,0 +1,22 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema",
+  "extends": ["config:base"],
+    "hostRules": [
+    {
+      "matchHost": "oci.bi.denbi.de",
+      "hostType": "docker",
+      "username": "simplevm+renovate",
+      "password": "{{ secrets.OCI_TOKEN_SIMPLEVM }}"
+    }
+  ],
+  "customManagers": [
+    {
+      "customApi": "docker",
+      "glob": ["templates/docker-compose.yml.j2"],
+      "fileMatch": ["^docker-compose.yml.j2$"],
+      "valueRegex": [
+        ["image: \"oci.bi.denbi.de/simplevm/forc:{{ FORC_IMAGE_TAG \\| default\\('([^']*)'\\) }}\"", "$1"]
+      ]
+    }
+  ]
+}

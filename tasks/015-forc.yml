@@ -1,43 +1,44 @@
 ---
 
-- name: Clone forc repo
-  git:
-    repo: https://github.com/deNBI/simpleVMWebGateway.git
-    dest: "{{ FORC_INSTALLATION_PATH }}/simpleVMWebGateway/"
-    force: yes
-    version: "{{ REPOSITORY_TAG | default(REPOSITORY_BRANCH) | default('dev') }}"
+- name: Create directory for docker-compose setup
+  file:
+    path: "{{ FORC_INSTALLATION_PATH }}/forc"
+    state: directory
+    mode: '0755'
 
+- name: Create backup scripts directory
+  file:
+    path: "{{ FORC_INSTALLATION_PATH }}/forc/backup"
+    state: directory
+    mode: '0755'
 
-- name: Install requirements in a venv
-  pip:
-    requirements: "{{ FORC_INSTALLATION_PATH }}simpleVMWebGateway/FastapiOpenRestyConfigurator/requirements.txt"
-    virtualenv: "{{ FORC_INSTALLATION_PATH }}simpleVMWebGateway/FastapiOpenRestyConfigurator/venv"
-    virtualenv_python: python3
-
-- name: Generate gunicorn config
-  template:
-    src: gunicorn_conf.py.j2
-    dest: "{{ FORC_INSTALLATION_PATH }}simpleVMWebGateway/FastapiOpenRestyConfigurator/gunicorn_conf.py"
-
-- name: Generate systemd unit file for forc
-  template:
-    src: forc.service.j2
-    dest: /etc/systemd/system/forc.service
+- name: Copy backup scripts
+  copy:
+    src: "{{ item }}"
+    dest: "{{ FORC_INSTALLATION_PATH }}/forc/backup/"
+  with_items:
+    - backup.sh
+    - backup-cron
+    - install-packages.sh
 
 - name: Generate .env file for forc
   template:
     src: forc.env.j2
-    dest: "{{ FORC_INSTALLATION_PATH }}simpleVMWebGateway/FastapiOpenRestyConfigurator/.env"
+    dest: "{{ FORC_INSTALLATION_PATH }}/forc/.env"
 
-- name: Copy example templates
-  copy:
-    src: "{{ FORC_INSTALLATION_PATH }}/simpleVMWebGateway/examples/templates/"
-    dest: "{{ FORC_TEMPLATE_PATH }}"
-    remote_src: true
+- name: Generate docker-compose.yml
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ FORC_INSTALLATION_PATH }}/forc/docker-compose.yml"
 
-- name: Reload systemd daemon and enable forc
-  systemd:
-    service: forc
-    daemon_reload: yes
-    enabled: True
-    state: restarted
+- name: Log into Docker registry
+  ansible.builtin.shell: |
+    echo "{{ OCI_TOKEN }}" | docker login {{ DOCKER_REGISTRY_URL }} -u "{{ OCI_USERNAME }}" --password-stdin
+  when: OCI_USERNAME != ""
+  no_log: true
+
+- name: Start forc container
+  community.docker.docker_compose_v2:
+    project_src: "{{ FORC_INSTALLATION_PATH }}/forc"
+    state: present
+    wait: yes
