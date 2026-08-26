@@ -74,7 +74,7 @@ To install FORC (includes OpenResty in Docker):
           certbot_create_if_missing: true
           certbot_create_standalone_stop_services: []
           certbot_auto_renew_user: root
-          certbot_auto_renew_options: "--pre-hook "systemctl stop openresty" --post-hook "systemctl start openresty" --quiet --no-self-upgrade"
+          certbot_auto_renew_options: "--pre-hook "docker stop forc --post-hook "docker start forc" --quiet --no-self-upgrade"
 
           certbot_certs:
           - domains:
