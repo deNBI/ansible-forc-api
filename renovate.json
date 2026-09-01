@@ -1,7 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema",
-  "extends": ["config:base"],
-    "hostRules": [
+  "extends": [
+    "config:base"
+  ],
+  "hostRules": [
     {
       "matchHost": "oci.bi.denbi.de",
       "hostType": "docker",
@@ -12,11 +14,26 @@
   "customManagers": [
     {
       "customApi": "docker",
-      "glob": ["templates/docker-compose.yml.j2"],
-      "fileMatch": ["^docker-compose.yml.j2$"],
+      "glob": [
+        "templates/docker-compose.yml.j2"
+      ],
+      "fileMatch": [
+        "^docker-compose.yml.j2$"
+      ],
       "valueRegex": [
-        ["image: \"oci.bi.denbi.de/simplevm/forc:{{ FORC_IMAGE_TAG \\| default\\('([^']*)'\\) }}\"", "$1"]
+        [
+          "image: \"oci.bi.denbi.de/simplevm/forc:{{ FORC_IMAGE_TAG \\| default\\('([^']*)'\\) }}\"",
+          "$1"
+        ]
       ]
+    }
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "pin"
+      ],
+      "enabled": false
     }
   ]
 }
