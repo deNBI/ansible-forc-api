@@ -34,6 +34,13 @@
         "pin"
       ],
       "enabled": false
+    },
+    {
+      "matchLabels": [
+        "security"
+      ],
+      "minimumReleaseAge": null
     }
-  ]
+  ],
+  "minimumReleaseAge": "3 days"
 }
