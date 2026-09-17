@@ -9,7 +9,7 @@ services:
       - "{{ FORC_BACKEND_PATH }}:/var/forc/backend_path/:rw"
       - "/etc/letsencrypt/:/etc/letsencrypt/:r"
     ports:
-      - "0.0.0.0:5000:5000"
+      - "0.0.0.0:{{FORC_SERVICE_PORT}}:{{FORC_SERVICE_PORT}}"
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
 
