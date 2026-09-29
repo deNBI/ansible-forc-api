@@ -3,6 +3,10 @@ services:
     image: "oci.bi.denbi.de/simplevm/forc:{{ FORC_IMAGE_TAG | default('0.14.0') }}"
     container_name: forc
     restart: always
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
     env_file:
       - .env # envs for openresty
     volumes:
