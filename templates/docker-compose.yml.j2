@@ -12,6 +12,8 @@ services:
     volumes:
       - "{{ FORC_BACKEND_PATH }}:/var/forc/backend_path/:rw"
       - "/etc/letsencrypt/:/etc/letsencrypt/:r"
+      - "{{ SSL_CERTIFICATE }}:/var/forc/certs/cert/fullchain.pem"
+      - "{{ SSL_CERTIFICATE_KEY }}:/var/forc/certs/cert/privkey.pem"
     ports:
       - "0.0.0.0:{{FORC_SERVICE_PORT}}:{{FORC_SERVICE_PORT}}"
       - "0.0.0.0:80:80"
