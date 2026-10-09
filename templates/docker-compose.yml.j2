@@ -18,7 +18,7 @@ services:
       - "0.0.0.0:443:443"
 
   backup:
-    image: "quay.io/denbicloud/cron-backup:0.14.3"
+    image: "oci.bi.denbi.de/denbicloud/cron-backup:0.18.6"
     container_name: backup-forc
     restart: always
     volumes:
